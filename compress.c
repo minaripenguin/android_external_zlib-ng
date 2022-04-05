@@ -75,6 +75,8 @@ int Z_EXPORT PREFIX(compress)(unsigned char *dest, z_size_t *destLen, const unsi
 z_size_t Z_EXPORT PREFIX(compressBound)(z_size_t sourceLen) {
 #ifndef NO_QUICK_STRATEGY
     return sourceLen                       /* The source size itself */
+      + (sourceLen == 0 ? 1 : 0)           /* Always at least one byte for any input */
+      + (sourceLen < 9 ? 1 : 0)            /* One extra byte for lengths less than 9 */
       + DEFLATE_QUICK_OVERHEAD(sourceLen)  /* Source encoding overhead, padded to next full byte */
       + DEFLATE_BLOCK_OVERHEAD             /* Deflate block overhead bytes */
       + ZLIB_WRAPLEN;                      /* zlib wrapper */
